@@ -2,13 +2,23 @@
 
 Plan pomodoro sessions and keep a session log.
 
-## Status
+## Usage
 
-Starter project with a working core module and unit tests.
+```bash
+python3 -c "from timer import *; print(format_seconds(1500)); print(plan_session(2))"
+```
+
+## Features
+
+- Session planning with work and break blocks
+- Readable mm:ss formatting
+- CSV logging with log_session(path, kind, seconds)
 
 ## Tests
 
+```bash
 python3 -m unittest -q
+```
 
 ## License
 
