@@ -24,5 +24,23 @@ class TimerTests(unittest.TestCase):
             plan_session(rounds=0)
 
 
+class SessionLogTests(unittest.TestCase):
+    def test_log_session_writes_header_once(self):
+        import csv
+        import os
+        import tempfile
+
+        from timer import log_session
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "sessions.csv")
+            log_session(path, "work", 1500)
+            log_session(path, "short_break", 300)
+            with open(path, encoding="utf-8") as handle:
+                rows = list(csv.reader(handle))
+        self.assertEqual(rows[0], ["kind", "seconds"])
+        self.assertEqual(len(rows), 3)
+
+
 if __name__ == "__main__":
     unittest.main()
