@@ -19,3 +19,16 @@ def plan_session(rounds=4, work=25, short_break=5):
         if round_number < rounds:
             plan.append(("short_break", short_break * 60))
     return plan
+
+
+def log_session(path, kind, seconds):
+    """Append a completed session to a CSV log."""
+    import os
+
+    new_file = not os.path.exists(path)
+    with open(path, "a", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        if new_file:
+            writer.writerow(["kind", "seconds"])
+        writer.writerow([kind, seconds])
+    return path
