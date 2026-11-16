@@ -95,5 +95,68 @@ class WeeklyStatsTests(unittest.TestCase):
         self.assertEqual(stats, {"2026-11-10": {"work_minutes": 10.0, "rounds": 1}})
 
 
+class SummaryTests(unittest.TestCase):
+    def test_summary_counts_mixed_rows(self):
+        import os
+        import tempfile
+
+        from timer import log_session, summary
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "sessions.csv")
+            log_session(path, "work", 1500, day="2026-11-10")
+            log_session(path, "work", 600, day="2026-11-11")
+            log_session(path, "short_break", 300, day="2026-11-11")
+            self.assertEqual(
+                summary(path),
+                {
+                    "work_minutes": 35.0,
+                    "work_sessions": 2,
+                    "break_sessions": 1,
+                    "total_sessions": 3,
+                },
+            )
+
+    def test_summary_accepts_legacy_two_column_rows(self):
+        import os
+        import tempfile
+
+        from timer import summary
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "sessions.csv")
+            with open(path, "w", encoding="utf-8") as handle:
+                handle.write("kind,seconds\nwork,1200\nshort_break,300\n")
+                handle.write("kind,seconds,date\nwork,600,2026-11-10\n")
+            self.assertEqual(
+                summary(path),
+                {
+                    "work_minutes": 30.0,
+                    "work_sessions": 2,
+                    "break_sessions": 1,
+                    "total_sessions": 3,
+                },
+            )
+
+    def test_summary_of_empty_log_is_zero(self):
+        import os
+        import tempfile
+
+        from timer import summary
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "sessions.csv")
+            open(path, "w", encoding="utf-8").close()
+            self.assertEqual(
+                summary(path),
+                {
+                    "work_minutes": 0.0,
+                    "work_sessions": 0,
+                    "break_sessions": 0,
+                    "total_sessions": 0,
+                },
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
