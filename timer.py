@@ -60,3 +60,33 @@ def weekly_stats(path, today=None):
     for entry in stats.values():
         entry["work_minutes"] = round(entry["work_minutes"], 2)
     return stats
+
+
+def summary(path):
+    result = {
+        "work_minutes": 0.0,
+        "work_sessions": 0,
+        "break_sessions": 0,
+        "total_sessions": 0,
+    }
+    try:
+        handle = open(path, newline="", encoding="utf-8")
+    except FileNotFoundError:
+        return result
+    with handle:
+        for row in csv.reader(handle):
+            if not row or row[0] == "kind" or len(row) < 2:
+                continue
+            kind, seconds = row[0], row[1]
+            try:
+                seconds = int(seconds)
+            except ValueError:
+                continue
+            result["total_sessions"] += 1
+            if kind == "work":
+                result["work_sessions"] += 1
+                result["work_minutes"] += seconds / 60
+            elif "break" in kind:
+                result["break_sessions"] += 1
+    result["work_minutes"] = round(result["work_minutes"], 2)
+    return result
