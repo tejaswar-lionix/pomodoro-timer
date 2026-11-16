@@ -1,6 +1,6 @@
 import unittest
 
-from timer import format_seconds, log_session, plan_session, weekly_stats
+from timer import format_plan, format_seconds, log_session, plan_session, weekly_stats
 
 
 class TimerTests(unittest.TestCase):
@@ -22,6 +22,15 @@ class TimerTests(unittest.TestCase):
     def test_plan_requires_rounds(self):
         with self.assertRaises(ValueError):
             plan_session(rounds=0)
+
+    def test_format_plan_numbers_each_block(self):
+        self.assertEqual(
+            format_plan([("work", 1500), ("short_break", 300)]),
+            "1. work 25:00\n2. short_break 05:00",
+        )
+
+    def test_format_plan_of_empty_plan(self):
+        self.assertEqual(format_plan([]), "No sessions.")
 
 
 class SessionLogTests(unittest.TestCase):

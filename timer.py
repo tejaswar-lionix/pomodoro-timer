@@ -22,6 +22,15 @@ def plan_session(rounds=4, work=25, short_break=5):
     return plan
 
 
+def format_plan(plan):
+    if not plan:
+        return "No sessions."
+    lines = []
+    for index, (kind, seconds) in enumerate(plan, start=1):
+        lines.append(f"{index}. {kind} {format_seconds(seconds)}")
+    return "\n".join(lines)
+
+
 def log_session(path, kind, seconds, day=None):
     """Append a completed session to a CSV log."""
     import os
