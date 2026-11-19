@@ -22,6 +22,12 @@ def plan_session(rounds=4, work=25, short_break=5):
     return plan
 
 
+def session_total(plan):
+    if not plan:
+        return 0
+    return sum(seconds for _, seconds in plan)
+
+
 def format_plan(plan):
     if not plan:
         return "No sessions."

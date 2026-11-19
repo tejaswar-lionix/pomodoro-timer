@@ -1,6 +1,13 @@
 import unittest
 
-from timer import format_plan, format_seconds, log_session, plan_session, weekly_stats
+from timer import (
+    format_plan,
+    format_seconds,
+    log_session,
+    plan_session,
+    session_total,
+    weekly_stats,
+)
 
 
 class TimerTests(unittest.TestCase):
@@ -31,6 +38,15 @@ class TimerTests(unittest.TestCase):
 
     def test_format_plan_of_empty_plan(self):
         self.assertEqual(format_plan([]), "No sessions.")
+
+    def test_session_total_sums_plan(self):
+        self.assertEqual(
+            session_total(plan_session(rounds=2, work=25, short_break=5)),
+            3300,
+        )
+
+    def test_session_total_of_empty_plan(self):
+        self.assertEqual(session_total([]), 0)
 
 
 class SessionLogTests(unittest.TestCase):
