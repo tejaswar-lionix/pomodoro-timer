@@ -28,6 +28,10 @@ python3 -c "from timer import *; print(summary('sessions.csv'))"
 python3 -m unittest -q
 ```
 
+## Additional API
+
+- `plan_with_long_breaks(rounds, work, short_break, long_break, interval)` inserts a long break every interval rounds.
+
 ## License
 
 MIT
