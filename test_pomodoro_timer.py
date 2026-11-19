@@ -183,5 +183,22 @@ class SummaryTests(unittest.TestCase):
             )
 
 
+class LongBreakPlanTests(unittest.TestCase):
+    def test_inserts_long_break_every_interval(self):
+        from timer import plan_with_long_breaks, session_total
+
+        plan = plan_with_long_breaks(rounds=8, interval=4)
+        kinds = [kind for kind, _ in plan]
+        self.assertEqual(kinds.count("long_break"), 1)
+        self.assertEqual(kinds[7], "long_break")
+        self.assertEqual(session_total(plan), 14700)
+
+    def test_rejects_bad_interval(self):
+        from timer import plan_with_long_breaks
+
+        with self.assertRaises(ValueError):
+            plan_with_long_breaks(rounds=4, interval=0)
+
+
 if __name__ == "__main__":
     unittest.main()

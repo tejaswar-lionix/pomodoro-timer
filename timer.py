@@ -105,3 +105,22 @@ def summary(path):
                 result["break_sessions"] += 1
     result["work_minutes"] = round(result["work_minutes"], 2)
     return result
+
+
+def plan_with_long_breaks(
+    rounds=4, work=25, short_break=5, long_break=15, interval=4
+):
+    """Build a plan that inserts a long break every interval rounds."""
+    if rounds < 1:
+        raise ValueError("rounds must be at least 1")
+    if interval < 1:
+        raise ValueError("interval must be at least 1")
+    plan = []
+    for round_number in range(1, rounds + 1):
+        plan.append(("work", work * 60))
+        if round_number < rounds:
+            if round_number % interval == 0:
+                plan.append(("long_break", long_break * 60))
+            else:
+                plan.append(("short_break", short_break * 60))
+    return plan
